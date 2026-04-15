@@ -10,11 +10,11 @@ import java.sql.SQLException;
 public class DBConnection {
 
     // ── Configuration ────────────────────────────────────────────────────────
-    private static final String DB_URL  = "jdbc:mysql://localhost:3306/hospital_db"
-                                        + "?useSSL=false&allowPublicKeyRetrieval=true"
-                                        + "&serverTimezone=UTC";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/hospital_db"
+            + "?useSSL=false&allowPublicKeyRetrieval=true"
+            + "&serverTimezone=UTC";
     private static final String DB_USER = "root";
-    private static final String DB_PASS = "";   // ← Empty password for default XAMPP/WAMP
+    private static final String DB_PASS = "mmcoe2028"; // ← Empty password for default XAMPP/WAMP
     // ─────────────────────────────────────────────────────────────────────────
 
     /**
@@ -26,8 +26,9 @@ public class DBConnection {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             throw new SQLException(
-                "MySQL JDBC Driver not found.\n"
-              + "Make sure mysql-connector-j-*.jar is in the lib/ folder.", e);
+                    "MySQL JDBC Driver not found.\n"
+                            + "Make sure mysql-connector-j-*.jar is in the lib/ folder.",
+                    e);
         }
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
     }
