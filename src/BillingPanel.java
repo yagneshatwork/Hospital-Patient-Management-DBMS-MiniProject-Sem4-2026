@@ -153,15 +153,21 @@ public class BillingPanel extends JPanel {
         JPanel p = new JPanel(new BorderLayout(0, 8));
         p.setBackground(UIHelper.BG_DARK);
 
+        JPanel top = new JPanel(new BorderLayout());
+        top.setBackground(UIHelper.BG_DARK);
+
         JLabel lbl = new JLabel("Saved Bills History");
         lbl.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lbl.setForeground(UIHelper.ACCENT);
+
+        top.add(lbl, BorderLayout.WEST);
+        top.add(UIHelper.createSearchPanel(billTable, tableModel), BorderLayout.EAST);
 
         int[] widths = {60, 80, 140, 120, 120};
         for (int i = 0; i < widths.length; i++)
             billTable.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
 
-        p.add(lbl, BorderLayout.NORTH);
+        p.add(top, BorderLayout.NORTH);
         p.add(UIHelper.createScrollPane(billTable), BorderLayout.CENTER);
         return p;
     }

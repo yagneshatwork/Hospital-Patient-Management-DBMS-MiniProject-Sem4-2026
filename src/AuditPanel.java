@@ -116,10 +116,21 @@ public class AuditPanel extends JPanel {
         JPanel p = new JPanel(new BorderLayout(0, 8));
         p.setBackground(UIHelper.BG_DARK);
 
+        JPanel top = new JPanel(new BorderLayout());
+        top.setBackground(UIHelper.BG_DARK);
+
+        JLabel lbl = new JLabel("Audit Records");
+        lbl.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lbl.setForeground(UIHelper.ACCENT);
+
+        top.add(lbl, BorderLayout.WEST);
+        top.add(UIHelper.createSearchPanel(auditTable, tableModel), BorderLayout.EAST);
+
         int[] widths = {70, 80, 160, 90, 180};
         for (int i = 0; i < widths.length; i++)
             auditTable.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
 
+        p.add(top, BorderLayout.NORTH);
         p.add(UIHelper.createScrollPane(auditTable), BorderLayout.CENTER);
         return p;
     }

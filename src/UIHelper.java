@@ -242,6 +242,40 @@ public class UIHelper {
         return sep;
     }
 
+    // ── Factory: Search Panel ────────────────────────────────────────────────
+    public static JPanel createSearchPanel(JTable table, DefaultTableModel model) {
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        p.setBackground(BG_DARK);
+
+        JLabel iconLbl = new JLabel("🔍");
+        iconLbl.setForeground(TEXT_SECONDARY);
+
+        JTextField searchField = createTextField();
+        searchField.setPreferredSize(new Dimension(220, 32));
+        searchField.setToolTipText("Search across all columns...");
+
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
+
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { search(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { search(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { search(); }
+            private void search() {
+                String text = searchField.getText();
+                if (text.trim().length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+        });
+
+        p.add(iconLbl);
+        p.add(searchField);
+        return p;
+    }
+
     // ── Inner class: Rounded line border ────────────────────────────────────
     static class RoundedLineBorder extends AbstractBorder {
         private final Color color;

@@ -149,9 +149,15 @@ public class PatientPanel extends JPanel {
         JPanel p = new JPanel(new BorderLayout(0, 8));
         p.setBackground(UIHelper.BG_DARK);
 
+        JPanel top = new JPanel(new BorderLayout());
+        top.setBackground(UIHelper.BG_DARK);
+
         JLabel lbl = new JLabel("All Patients");
         lbl.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lbl.setForeground(UIHelper.ACCENT);
+
+        top.add(lbl, BorderLayout.WEST);
+        top.add(UIHelper.createSearchPanel(patientTable, tableModel), BorderLayout.EAST);
 
         // Column widths
         int[] widths = {40, 130, 40, 70, 100, 140, 145};
@@ -162,7 +168,7 @@ public class PatientPanel extends JPanel {
             if (!e.getValueIsAdjusting()) populateForm();
         });
 
-        p.add(lbl, BorderLayout.NORTH);
+        p.add(top, BorderLayout.NORTH);
         p.add(UIHelper.createScrollPane(patientTable), BorderLayout.CENTER);
         return p;
     }

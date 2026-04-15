@@ -146,15 +146,21 @@ public class TreatmentPanel extends JPanel {
         JPanel p = new JPanel(new BorderLayout(0, 8));
         p.setBackground(UIHelper.BG_DARK);
 
+        JPanel top = new JPanel(new BorderLayout());
+        top.setBackground(UIHelper.BG_DARK);
+
         JLabel lbl = new JLabel("All Treatments");
         lbl.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lbl.setForeground(UIHelper.ACCENT);
+
+        top.add(lbl, BorderLayout.WEST);
+        top.add(UIHelper.createSearchPanel(treatmentTable, tableModel), BorderLayout.EAST);
 
         int[] widths = {60, 80, 200, 100, 120};
         for (int i = 0; i < widths.length; i++)
             treatmentTable.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
 
-        p.add(lbl, BorderLayout.NORTH);
+        p.add(top, BorderLayout.NORTH);
         p.add(UIHelper.createScrollPane(treatmentTable), BorderLayout.CENTER);
         return p;
     }
