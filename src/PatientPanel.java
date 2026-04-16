@@ -12,20 +12,23 @@ import java.sql.*;
 public class PatientPanel extends JPanel {
 
     // ── Form fields ──────────────────────────────────────────────────────────
-    private final JTextField      nameField  = UIHelper.createTextField();
-    private final JTextField      ageField   = UIHelper.createTextField();
-    private final JTextField      phoneField = UIHelper.createTextField();
-    private final JComboBox<String> genderBox = UIHelper.createComboBox("Male","Female","Other");
-    private final JTextArea       addressArea;
+    private final JTextField nameField = UIHelper.createTextField();
+    private final JTextField ageField = UIHelper.createTextField();
+    private final JTextField phoneField = UIHelper.createTextField();
+    private final JComboBox<String> genderBox = UIHelper.createComboBox("Male", "Female", "Other");
+    private final JTextArea addressArea;
 
     // ── Table ────────────────────────────────────────────────────────────────
-    private final String[] COLS = {"ID", "Name", "Age", "Gender", "Phone", "Address", "Registered At"};
+    private final String[] COLS = { "ID", "Name", "Age", "Gender", "Phone", "Address", "Registered At" };
     private final DefaultTableModel tableModel = new DefaultTableModel(COLS, 0) {
-        @Override public boolean isCellEditable(int r, int c) { return false; }
+        @Override
+        public boolean isCellEditable(int r, int c) {
+            return false;
+        }
     };
     private final JTable patientTable = UIHelper.createTable(tableModel);
 
-    private int selectedId = -1;   // -1 means "no selection"
+    private int selectedId = -1; // -1 means "no selection"
 
     // ────────────────────────────────────────────────────────────────────────
     public PatientPanel() {
@@ -35,7 +38,7 @@ public class PatientPanel extends JPanel {
 
         addressArea = buildAddressArea();
 
-        add(buildHeader(),  BorderLayout.NORTH);
+        add(buildHeader(), BorderLayout.NORTH);
         add(buildContent(), BorderLayout.CENTER);
 
         loadPatients();
@@ -48,7 +51,8 @@ public class PatientPanel extends JPanel {
         p.setBorder(BorderFactory.createEmptyBorder(0, 0, 16, 0));
 
         JLabel title = UIHelper.createSectionTitle("👤  Patient Management");
-        JLabel sub   = UIHelper.createLabel("Add, edit and remove patient records. Update/Delete events are auto-logged.");
+        JLabel sub = UIHelper
+                .createLabel("Add, edit and remove patient records. Update/Delete events are auto-logged.");
         sub.setFont(UIHelper.FONT_SMALL);
 
         JPanel info = new JPanel(new GridLayout(2, 1, 0, 2));
@@ -59,7 +63,7 @@ public class PatientPanel extends JPanel {
         JButton refresh = UIHelper.createButton("↻  Refresh", UIHelper.ACCENT, UIHelper.ACCENT_HOVER);
         refresh.addActionListener(e -> loadPatients());
 
-        p.add(info,    BorderLayout.WEST);
+        p.add(info, BorderLayout.WEST);
         p.add(refresh, BorderLayout.EAST);
         p.add(UIHelper.createSeparator(), BorderLayout.SOUTH);
         return p;
@@ -86,9 +90,9 @@ public class PatientPanel extends JPanel {
         cardTitle.setFont(new Font("Segoe UI", Font.BOLD, 14));
         cardTitle.setForeground(UIHelper.ACCENT);
 
-        card.add(cardTitle,        BorderLayout.NORTH);
-        card.add(buildFields(),    BorderLayout.CENTER);
-        card.add(buildButtons(),   BorderLayout.SOUTH);
+        card.add(cardTitle, BorderLayout.NORTH);
+        card.add(buildFields(), BorderLayout.CENTER);
+        card.add(buildButtons(), BorderLayout.SOUTH);
         return card;
     }
 
@@ -99,28 +103,36 @@ public class PatientPanel extends JPanel {
         g.fill = GridBagConstraints.HORIZONTAL;
         g.weightx = 1.0;
 
-        addRow(p, g, 0, "Full Name *",   nameField);
-        addRow(p, g, 1, "Age *",         ageField);
-        addRow(p, g, 2, "Gender",        genderBox);
-        addRow(p, g, 3, "Phone",         phoneField);
+        addRow(p, g, 0, "Full Name *", nameField);
+        addRow(p, g, 1, "Age *", ageField);
+        addRow(p, g, 2, "Gender", genderBox);
+        addRow(p, g, 3, "Phone", phoneField);
 
         // Address row
-        g.gridx = 0; g.gridy = 8; g.gridwidth = 2; g.insets = new Insets(6, 0, 2, 0);
+        g.gridx = 0;
+        g.gridy = 8;
+        g.gridwidth = 2;
+        g.insets = new Insets(6, 0, 2, 0);
         p.add(UIHelper.createLabel("Address"), g);
 
         JScrollPane addrScroll = UIHelper.createScrollPane(addressArea);
         addrScroll.setPreferredSize(new Dimension(0, 78));
         addrScroll.getViewport().setBackground(UIHelper.BG_INPUT);
-        g.gridy = 9; g.insets = new Insets(0, 0, 0, 0);
+        g.gridy = 9;
+        g.insets = new Insets(0, 0, 0, 0);
         p.add(addrScroll, g);
 
         return p;
     }
 
     private void addRow(JPanel p, GridBagConstraints g, int pos, String label, JComponent field) {
-        g.gridx = 0; g.gridy = pos * 2; g.gridwidth = 2; g.insets = new Insets(6, 0, 2, 0);
+        g.gridx = 0;
+        g.gridy = pos * 2;
+        g.gridwidth = 2;
+        g.insets = new Insets(6, 0, 2, 0);
         p.add(UIHelper.createLabel(label), g);
-        g.gridy = pos * 2 + 1; g.insets = new Insets(0, 0, 0, 0);
+        g.gridy = pos * 2 + 1;
+        g.insets = new Insets(0, 0, 0, 0);
         p.add(field, g);
     }
 
@@ -129,18 +141,20 @@ public class PatientPanel extends JPanel {
         p.setBackground(UIHelper.BG_CARD);
         p.setBorder(BorderFactory.createEmptyBorder(14, 0, 0, 0));
 
-        JButton addBtn    = UIHelper.createButton("➕  Add",    UIHelper.SUCCESS, UIHelper.SUCCESS_HOVER);
-        JButton updateBtn = UIHelper.createButton("✏  Update",  UIHelper.WARNING, UIHelper.WARNING_HOVER);
-        JButton deleteBtn = UIHelper.createButton("🗑  Delete",  UIHelper.DANGER,  UIHelper.DANGER_HOVER);
-        JButton clearBtn  = UIHelper.createButton("✖  Clear",   UIHelper.BG_INPUT, UIHelper.BORDER_COLOR);
+        JButton addBtn = UIHelper.createButton("➕  Add", UIHelper.SUCCESS, UIHelper.SUCCESS_HOVER);
+        JButton updateBtn = UIHelper.createButton("✏  Update", UIHelper.WARNING, UIHelper.WARNING_HOVER);
+        JButton deleteBtn = UIHelper.createButton("🗑  Delete", UIHelper.DANGER, UIHelper.DANGER_HOVER);
+        JButton clearBtn = UIHelper.createButton("✖  Clear", UIHelper.BG_INPUT, UIHelper.BORDER_COLOR);
 
-        addBtn   .addActionListener(e -> addPatient());
+        addBtn.addActionListener(e -> addPatient());
         updateBtn.addActionListener(e -> updatePatient());
         deleteBtn.addActionListener(e -> deletePatient());
-        clearBtn .addActionListener(e -> clearForm());
+        clearBtn.addActionListener(e -> clearForm());
 
-        p.add(addBtn); p.add(updateBtn);
-        p.add(deleteBtn); p.add(clearBtn);
+        p.add(addBtn);
+        p.add(updateBtn);
+        p.add(deleteBtn);
+        p.add(clearBtn);
         return p;
     }
 
@@ -160,12 +174,13 @@ public class PatientPanel extends JPanel {
         top.add(UIHelper.createSearchPanel(patientTable, tableModel), BorderLayout.EAST);
 
         // Column widths
-        int[] widths = {40, 130, 40, 70, 100, 140, 145};
+        int[] widths = { 40, 130, 40, 70, 100, 140, 145 };
         for (int i = 0; i < widths.length; i++)
             patientTable.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
 
         patientTable.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) populateForm();
+            if (!e.getValueIsAdjusting())
+                populateForm();
         });
 
         p.add(top, BorderLayout.NORTH);
@@ -191,115 +206,154 @@ public class PatientPanel extends JPanel {
         tableModel.setRowCount(0);
         String sql = "SELECT * FROM Patient ORDER BY patient_id DESC";
         try (Connection c = DBConnection.getConnection();
-             Statement  s = c.createStatement();
-             ResultSet  r = s.executeQuery(sql)) {
+                Statement s = c.createStatement();
+                ResultSet r = s.executeQuery(sql)) {
             while (r.next()) {
-                tableModel.addRow(new Object[]{
-                    r.getInt("patient_id"),
-                    r.getString("name"),
-                    r.getInt("age"),
-                    r.getString("gender"),
-                    r.getString("phone"),
-                    r.getString("address"),
-                    r.getTimestamp("created_at")
+                tableModel.addRow(new Object[] {
+                        r.getInt("patient_id"),
+                        r.getString("name"),
+                        r.getInt("age"),
+                        r.getString("gender"),
+                        r.getString("phone"),
+                        r.getString("address"),
+                        r.getTimestamp("created_at")
                 });
             }
-        } catch (SQLException ex) { showError("Load failed: " + ex.getMessage()); }
+        } catch (SQLException ex) {
+            showError("Load failed: " + ex.getMessage());
+        }
     }
 
     private void addPatient() {
-        String name   = nameField.getText().trim();
+        String name = nameField.getText().trim();
         String ageStr = ageField.getText().trim();
-        if (name.isEmpty() || ageStr.isEmpty()) { showError("Name and Age are required."); return; }
+        if (name.isEmpty() || ageStr.isEmpty()) {
+            showError("Name and Age are required.");
+            return;
+        }
 
         try {
             int age = Integer.parseInt(ageStr);
-            if (age <= 0 || age > 150) { showError("Enter a valid age (1 – 150)."); return; }
+            if (age <= 0 || age > 150) {
+                showError("Enter a valid age (1 – 150).");
+                return;
+            }
 
             String sql = "INSERT INTO Patient (name,age,gender,phone,address) VALUES (?,?,?,?,?)";
             try (Connection c = DBConnection.getConnection();
-                 PreparedStatement ps = c.prepareStatement(sql)) {
+                    PreparedStatement ps = c.prepareStatement(sql)) {
                 ps.setString(1, name);
-                ps.setInt   (2, age);
+                ps.setInt(2, age);
                 ps.setString(3, (String) genderBox.getSelectedItem());
                 ps.setString(4, phoneField.getText().trim());
                 ps.setString(5, addressArea.getText().trim());
                 ps.executeUpdate();
                 showSuccess("Patient added successfully!");
-                clearForm(); loadPatients();
+                clearForm();
+                loadPatients();
             }
-        } catch (NumberFormatException e) { showError("Age must be a number."); }
-          catch (SQLException e)         { showError("Add failed: " + e.getMessage()); }
+        } catch (NumberFormatException e) {
+            showError("Age must be a number.");
+        } catch (SQLException e) {
+            showError("Add failed: " + e.getMessage());
+        }
     }
 
     private void updatePatient() {
-        if (selectedId == -1) { showError("Select a patient from the table first."); return; }
+        if (selectedId == -1) {
+            showError("Select a patient from the table first.");
+            return;
+        }
         String name = nameField.getText().trim();
         String ageStr = ageField.getText().trim();
-        if (name.isEmpty() || ageStr.isEmpty()) { showError("Name and Age are required."); return; }
+        if (name.isEmpty() || ageStr.isEmpty()) {
+            showError("Name and Age are required.");
+            return;
+        }
 
         try {
             int age = Integer.parseInt(ageStr);
             int ok = JOptionPane.showConfirmDialog(this,
-                "Update patient #" + selectedId + "?\n(Trigger will log the old values to Audit.)",
-                "Confirm Update", JOptionPane.YES_NO_OPTION);
-            if (ok != JOptionPane.YES_OPTION) return;
+                    "Update patient #" + selectedId + "?\n(Trigger will log the old values to Audit.)",
+                    "Confirm Update", JOptionPane.YES_NO_OPTION);
+            if (ok != JOptionPane.YES_OPTION)
+                return;
 
             String sql = "UPDATE Patient SET name=?,age=?,gender=?,phone=?,address=? WHERE patient_id=?";
             try (Connection c = DBConnection.getConnection();
-                 PreparedStatement ps = c.prepareStatement(sql)) {
+                    PreparedStatement ps = c.prepareStatement(sql)) {
                 ps.setString(1, name);
-                ps.setInt   (2, age);
+                ps.setInt(2, age);
                 ps.setString(3, (String) genderBox.getSelectedItem());
                 ps.setString(4, phoneField.getText().trim());
                 ps.setString(5, addressArea.getText().trim());
-                ps.setInt   (6, selectedId);
+                ps.setInt(6, selectedId);
                 ps.executeUpdate();
                 showSuccess("Patient updated! Audit log entry created.");
-                clearForm(); loadPatients();
+                clearForm();
+                loadPatients();
             }
-        } catch (NumberFormatException e) { showError("Age must be a number."); }
-          catch (SQLException e)         { showError("Update failed: " + e.getMessage()); }
+        } catch (NumberFormatException e) {
+            showError("Age must be a number.");
+        } catch (SQLException e) {
+            showError("Update failed: " + e.getMessage());
+        }
     }
 
     private void deletePatient() {
-        if (selectedId == -1) { showError("Select a patient from the table first."); return; }
+        if (selectedId == -1) {
+            showError("Select a patient from the table first.");
+            return;
+        }
 
         int ok = JOptionPane.showConfirmDialog(this,
-            "Delete patient #" + selectedId + "?\n" +
-            "• Trigger will log the deletion to Audit.\n" +
-            "• All treatment records will also be removed.",
-            "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        if (ok != JOptionPane.YES_OPTION) return;
+                "Delete patient #" + selectedId + "?\n" +
+                        "• Trigger will log the deletion to Audit.\n" +
+                        "• All treatment records will also be removed.",
+                "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (ok != JOptionPane.YES_OPTION)
+            return;
 
         try (Connection c = DBConnection.getConnection();
-             PreparedStatement ps = c.prepareStatement("DELETE FROM Patient WHERE patient_id=?")) {
+                PreparedStatement ps = c.prepareStatement("DELETE FROM Patient WHERE patient_id=?")) {
             ps.setInt(1, selectedId);
             ps.executeUpdate();
             showSuccess("Patient deleted! Audit log entry created.");
-            clearForm(); loadPatients();
-        } catch (SQLException e) { showError("Delete failed: " + e.getMessage()); }
+            clearForm();
+            loadPatients();
+        } catch (SQLException e) {
+            showError("Delete failed: " + e.getMessage());
+        }
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
     private void populateForm() {
         int row = patientTable.getSelectedRow();
-        if (row < 0) return;
+        if (row < 0)
+            return;
         selectedId = (int) tableModel.getValueAt(row, 0);
-        nameField  .setText((String) tableModel.getValueAt(row, 1));
-        ageField   .setText(String.valueOf(tableModel.getValueAt(row, 2)));
-        genderBox  .setSelectedItem(tableModel.getValueAt(row, 3));
-        phoneField .setText(tableModel.getValueAt(row, 4) != null ? tableModel.getValueAt(row, 4).toString() : "");
+        nameField.setText((String) tableModel.getValueAt(row, 1));
+        ageField.setText(String.valueOf(tableModel.getValueAt(row, 2)));
+        genderBox.setSelectedItem(tableModel.getValueAt(row, 3));
+        phoneField.setText(tableModel.getValueAt(row, 4) != null ? tableModel.getValueAt(row, 4).toString() : "");
         addressArea.setText(tableModel.getValueAt(row, 5) != null ? tableModel.getValueAt(row, 5).toString() : "");
     }
 
     private void clearForm() {
         selectedId = -1;
-        nameField.setText(""); ageField.setText(""); phoneField.setText(""); addressArea.setText("");
+        nameField.setText("");
+        ageField.setText("");
+        phoneField.setText("");
+        addressArea.setText("");
         genderBox.setSelectedIndex(0);
         patientTable.clearSelection();
     }
 
-    private void showError  (String m) { JOptionPane.showMessageDialog(this, m, "Error",   JOptionPane.ERROR_MESSAGE); }
-    private void showSuccess(String m) { JOptionPane.showMessageDialog(this, m, "Success", JOptionPane.INFORMATION_MESSAGE); }
+    private void showError(String m) {
+        JOptionPane.showMessageDialog(this, m, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void showSuccess(String m) {
+        JOptionPane.showMessageDialog(this, m, "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
 }
