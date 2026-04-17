@@ -3,6 +3,7 @@ import javax.swing.border.AbstractBorder;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.text.*;
 
 /**
  * UIHelper.java
@@ -135,6 +136,42 @@ public class UIHelper {
             new RoundedLineBorder(BORDER_COLOR, 1, 8),
             BorderFactory.createEmptyBorder(7, 12, 7, 12)
         ));
+        return f;
+    }
+
+    // ── Factory: Styled Numeric TextField ────────────────────────────────────
+    public static JTextField createNumericTextField(int maxLength, boolean allowDecimal) {
+        JTextField f = createTextField();
+        ((AbstractDocument) f.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string == null) return;
+                replace(fb, offset, 0, string, attr);
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text == null) return;
+                String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
+                String beforeOffset = currentText.substring(0, offset);
+                String afterOffset = currentText.substring(offset + length);
+                String newText = beforeOffset + text + afterOffset;
+
+                if (maxLength > 0 && newText.length() > maxLength) {
+                    return; // Reject if it exceeds max length
+                }
+
+                if (allowDecimal) {
+                    if (newText.matches("\\d*\\.?\\d*")) {
+                        super.replace(fb, offset, length, text, attrs);
+                    }
+                } else {
+                    if (newText.matches("\\d*")) {
+                        super.replace(fb, offset, length, text, attrs);
+                    }
+                }
+            }
+        });
         return f;
     }
 

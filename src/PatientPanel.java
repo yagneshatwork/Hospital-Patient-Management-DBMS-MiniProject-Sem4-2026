@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
 
 /**
@@ -13,8 +12,8 @@ public class PatientPanel extends JPanel {
 
     // ── Form fields ──────────────────────────────────────────────────────────
     private final JTextField nameField = UIHelper.createTextField();
-    private final JTextField ageField = UIHelper.createTextField();
-    private final JTextField phoneField = UIHelper.createTextField();
+    private final JTextField ageField = UIHelper.createNumericTextField(3, false);
+    private final JTextField phoneField = UIHelper.createNumericTextField(10, false);
     private final JComboBox<String> genderBox = UIHelper.createComboBox("Male", "Female", "Other");
     private final JTextArea addressArea;
 
@@ -106,7 +105,7 @@ public class PatientPanel extends JPanel {
         addRow(p, g, 0, "Full Name *", nameField);
         addRow(p, g, 1, "Age *", ageField);
         addRow(p, g, 2, "Gender", genderBox);
-        addRow(p, g, 3, "Phone", phoneField);
+        addRow(p, g, 3, "Phone *", phoneField);
 
         // Address row
         g.gridx = 0;
@@ -227,8 +226,15 @@ public class PatientPanel extends JPanel {
     private void addPatient() {
         String name = nameField.getText().trim();
         String ageStr = ageField.getText().trim();
-        if (name.isEmpty() || ageStr.isEmpty()) {
-            showError("Name and Age are required.");
+        String phone = phoneField.getText().trim();
+        
+        if (name.isEmpty() || ageStr.isEmpty() || phone.isEmpty()) {
+            showError("Name, Age, and Phone are required.");
+            return;
+        }
+
+        if (!phone.matches("\\d{10}")) {
+            showError("Phone number must be exactly 10 digits.");
             return;
         }
 
@@ -266,8 +272,15 @@ public class PatientPanel extends JPanel {
         }
         String name = nameField.getText().trim();
         String ageStr = ageField.getText().trim();
-        if (name.isEmpty() || ageStr.isEmpty()) {
-            showError("Name and Age are required.");
+        String phone = phoneField.getText().trim();
+        
+        if (name.isEmpty() || ageStr.isEmpty() || phone.isEmpty()) {
+            showError("Name, Age, and Phone are required.");
+            return;
+        }
+
+        if (!phone.matches("\\d{10}")) {
+            showError("Phone number must be exactly 10 digits.");
             return;
         }
 
@@ -285,7 +298,7 @@ public class PatientPanel extends JPanel {
                 ps.setString(1, name);
                 ps.setInt(2, age);
                 ps.setString(3, (String) genderBox.getSelectedItem());
-                ps.setString(4, phoneField.getText().trim());
+                ps.setString(4, phone);
                 ps.setString(5, addressArea.getText().trim());
                 ps.setInt(6, selectedId);
                 ps.executeUpdate();

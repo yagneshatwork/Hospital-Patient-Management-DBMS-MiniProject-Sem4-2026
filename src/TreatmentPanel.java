@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
 import java.time.LocalDate;
 
@@ -13,9 +12,9 @@ import java.time.LocalDate;
 public class TreatmentPanel extends JPanel {
 
     // ── Form fields ──────────────────────────────────────────────────────────
-    private final JTextField patientIdField     = UIHelper.createTextField();
+    private final JTextField patientIdField     = UIHelper.createNumericTextField(10, false);
     private final JTextField treatmentNameField = UIHelper.createTextField();
-    private final JTextField costField          = UIHelper.createTextField();
+    private final JTextField costField          = UIHelper.createNumericTextField(10, true);
     private final JTextField dateField          = UIHelper.createTextField();
 
     // ── Table ────────────────────────────────────────────────────────────────
@@ -193,6 +192,10 @@ public class TreatmentPanel extends JPanel {
 
         if (pidStr.isEmpty() || name.isEmpty() || costStr.isEmpty() || date.isEmpty()) {
             showError("All fields marked with * are required."); return;
+        }
+
+        if (!date.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            showError("Date must be in YYYY-MM-DD format."); return;
         }
 
         try {

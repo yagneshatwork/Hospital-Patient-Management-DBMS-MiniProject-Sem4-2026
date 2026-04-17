@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-
 /**
  * MainApp.java
  * Entry point for the Hospital Patient Management System.

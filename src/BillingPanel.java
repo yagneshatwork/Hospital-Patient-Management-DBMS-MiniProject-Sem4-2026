@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
 import java.time.LocalDate;
 
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 public class BillingPanel extends JPanel {
 
     // ── Widgets ───────────────────────────────────────────────────────────────
-    private final JTextField patientIdField = UIHelper.createTextField();
+    private final JTextField patientIdField = UIHelper.createNumericTextField(10, false);
     private final JLabel     amountLabel    = new JLabel("₹ 0.00");
     private final JLabel     patientName    = new JLabel(" ");
     private final JLabel     statusLabel    = new JLabel(" ");
