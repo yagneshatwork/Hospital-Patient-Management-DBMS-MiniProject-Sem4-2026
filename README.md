@@ -130,7 +130,3 @@ Treatment   (treatment_id PK, patient_id FK, treatment_name, cost, treatment_dat
 Billing     (bill_id PK, patient_id FK, total_amount, bill_date)
 Audit       (audit_id PK, patient_id, name, action_type, action_time)
 ```
-<<<<<<< HEAD
-
-=======
->>>>>>> 60a20fb32636900835bcb3d79034e725c51b4ff1
