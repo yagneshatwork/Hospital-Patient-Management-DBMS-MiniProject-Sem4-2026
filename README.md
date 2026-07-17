@@ -1,7 +1,7 @@
 # 🏥 Hospital Patient Management System
 **DBMS Mini Project — Java Swing + JDBC + MySQL**
 
----
+---  
 
 ## 📋 Project Overview
 
